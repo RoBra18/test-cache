@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HealthModule } from './health/health.module';
 import { ProveedorModule } from './proveedor/proveedor.module';
 import { RedisModule } from './redis/redis.module';
+import { PreciosModule } from './precios/precios.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { RedisModule } from './redis/redis.module';
     RedisModule,
     HealthModule,
     ProveedorModule,
+    PreciosModule,
     // TODO: registra aquí tu módulo de precios.
   ],
 })
