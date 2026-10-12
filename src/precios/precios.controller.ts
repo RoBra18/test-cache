@@ -1,18 +1,40 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Put, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Put, Res, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 import { PreciosService } from './precios.service';
+import { RateLimitGuard } from 'src/common/guards/rate-limit.guard';
 import { ConsultaPrecioRespuestaDto } from './dtos/consulta-precio-respuesta.dto';
+import { Response } from 'express';
 import { PrecioActualizadoRespuestaDto } from './dtos/precio-actualizado-respuesta.dto';
 import { ActualizarPrecioDto } from './dtos/actualizar-precio.dto';
 
 @ApiTags('precios')
+@ApiHeader({
+  name: 'x-api-key',
+  description: 'Clave de API del cliente para control de cuotas y rate limiting',
+  required: true,
+})
+@ApiUnauthorizedResponse({ description: 'Header x-api-key ausente o inválido' })
+@ApiResponse({
+  status: HttpStatus.TOO_MANY_REQUESTS,
+  description: 'Cuota de peticiones excedida (Rate Limit alcanzado)',
+  headers: {
+    'Retry-After': {
+      description: 'Segundos restantes para el reinicio de la ventana',
+      schema: { type: 'integer', example: 45 },
+    },
+  },
+})
+@UseGuards(RateLimitGuard)
+
 @Controller('precios')
 export class PreciosController {
   constructor(private readonly preciosService: PreciosService) {
