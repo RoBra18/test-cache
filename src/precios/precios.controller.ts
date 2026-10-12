@@ -10,11 +10,11 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { PreciosService } from './precios.service';
-import { RateLimitGuard } from 'src/common/guards/rate-limit.guard';
 import { ConsultaPrecioRespuestaDto } from './dtos/consulta-precio-respuesta.dto';
 import { Response } from 'express';
 import { PrecioActualizadoRespuestaDto } from './dtos/precio-actualizado-respuesta.dto';
 import { ActualizarPrecioDto } from './dtos/actualizar-precio.dto';
+import { RateLimitGuard } from '../common/guards/rate-limit.guard';
 
 @ApiTags('precios')
 @ApiHeader({

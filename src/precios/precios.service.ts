@@ -6,7 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { ProveedorPreciosService } from '../proveedor/proveedor-precios.service';
 import { ConsultaPrecioRespuestaDto } from './dtos/consulta-precio-respuesta.dto';
-import { CacheService } from 'src/redis/cache.service';
+import { CacheService } from '../redis/cache.service';
 import { PrecioActualizadoRespuestaDto } from './dtos/precio-actualizado-respuesta.dto';
 
 export type CacheStatus = 'HIT' | 'MISS';
