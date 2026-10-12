@@ -2,8 +2,8 @@ import { Global, Inject, Logger, Module, OnApplicationShutdown } from '@nestjs/c
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { CacheService } from './cache.service';
-
-export const REDIS = Symbol('REDIS');
+import {REDIS} from "./constants"
+export {REDIS}
 
 // Cliente de Redis compartido. Inyéctalo con: constructor(@Inject(REDIS) private readonly redis: Redis)
 @Global()
@@ -23,7 +23,7 @@ export const REDIS = Symbol('REDIS');
         redis.on('error', (err: NodeJS.ErrnoException) => logger.warn(`Error de conexión: ${err.message || err.code}`));
         return redis;
       },
-    },CacheService
+    } , CacheService
   ],
   exports: [REDIS, CacheService],
 })
