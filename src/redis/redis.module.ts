@@ -1,6 +1,7 @@
 import { Global, Inject, Logger, Module, OnApplicationShutdown } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import { CacheService } from './cache.service';
 
 export const REDIS = Symbol('REDIS');
 
@@ -22,9 +23,9 @@ export const REDIS = Symbol('REDIS');
         redis.on('error', (err: NodeJS.ErrnoException) => logger.warn(`Error de conexión: ${err.message || err.code}`));
         return redis;
       },
-    },
+    },CacheService
   ],
-  exports: [REDIS],
+  exports: [REDIS, CacheService],
 })
 export class RedisModule implements OnApplicationShutdown {
   constructor(@Inject(REDIS) private readonly redis: Redis) {}
