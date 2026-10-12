@@ -1,5 +1,4 @@
 import {
-    Inject,
     Injectable,
     Logger,
     NotFoundException,
@@ -8,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { ProveedorPreciosService } from '../proveedor/proveedor-precios.service';
 import { ConsultaPrecioRespuestaDto } from './dtos/consulta-precio-respuesta.dto';
 import { CacheService } from 'src/redis/cache.service';
+import { PrecioActualizadoRespuestaDto } from './dtos/precio-actualizado-respuesta.dto';
 
 export type CacheStatus = 'HIT' | 'MISS';
 
@@ -44,5 +44,28 @@ export class PreciosService {
         await this.cacheService.set(key, proveedorData, this.cacheTtl);
 
         return { data: proveedorData, cache: 'MISS' };
+    }
+
+    async actualizarPrecio(
+        sku: string,
+        nuevoPrecio: number,
+    ): Promise<PrecioActualizadoRespuestaDto> {
+        const actualizado = await this.proveedorService.actualizarPrecio(
+            sku,
+            nuevoPrecio,
+        );
+
+        if (!actualizado) {
+            throw new NotFoundException(`El SKU '${sku}' no existe en el proveedor`);
+        }
+
+        const key = this.getCacheKey(sku);
+        await this.cacheService.del(key);
+
+        return {
+            sku,
+            precio: nuevoPrecio,
+            moneda: 'BOB',
+        };
     }
 }
