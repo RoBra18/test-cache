@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Put, Res } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -8,6 +9,8 @@ import {
 import { Response } from 'express';
 import { PreciosService } from './precios.service';
 import { ConsultaPrecioRespuestaDto } from './dtos/consulta-precio-respuesta.dto';
+import { PrecioActualizadoRespuestaDto } from './dtos/precio-actualizado-respuesta.dto';
+import { ActualizarPrecioDto } from './dtos/actualizar-precio.dto';
 
 @ApiTags('precios')
 @Controller('precios')
@@ -33,10 +36,28 @@ export class PreciosController {
     },
   })
   @ApiNotFoundResponse({ description: 'SKU no encontrado en el proveedor' })
-  async obtenerPrecio( @Param('sku') sku: string, @Res({ passthrough: true }) res: Response,
+  async obtenerPrecio(@Param('sku') sku: string, @Res({ passthrough: true }) res: Response,
   ): Promise<ConsultaPrecioRespuestaDto> {
     const { data, cache } = await this.preciosService.obtenerPrecio(sku);
     res.setHeader('X-Cache', cache);
     return data;
+  }
+
+  @Put(':sku')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Actualizar precio de un producto',
+    description:
+      'Actualiza el precio en el proveedor e invalida la clave correspondiente en Redis.',
+  })
+  @ApiOkResponse({
+    description: 'Precio actualizado exitosamente e invalidado en caché',
+    type: PrecioActualizadoRespuestaDto,
+  })
+  @ApiBadRequestResponse({ description: 'Precio inválido (no numérico o menor/igual a 0)' })
+  @ApiNotFoundResponse({ description: 'SKU no encontrado en el proveedor' })
+  async actualizarPrecio(
+    @Param('sku') sku: string, @Body() dto: ActualizarPrecioDto ): Promise<PrecioActualizadoRespuestaDto> {
+    return this.preciosService.actualizarPrecio(sku, dto.precio);
   }
 }
