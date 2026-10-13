@@ -22,7 +22,7 @@ describe('Rate Limiting (e2e)', () => {
         get: (key: string, defaultValue?: any) => {
           const config: Record<string, any> = {
             RATE_LIMIT_MAX: testLimit,
-            RATE_LIMIT_WINDOW_SEGUNDOS: testWindow,
+            RATE_LIMIT_VENTANA_SEGUNDOS: testWindow,
             CACHE_TTL_SEGUNDOS: 60,
             REDIS_HOST: process.env.REDIS_HOST || 'localhost',
             REDIS_PORT: process.env.REDIS_PORT || 6379,
