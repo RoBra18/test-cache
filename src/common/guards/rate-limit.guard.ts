@@ -33,7 +33,7 @@ export class RateLimitGuard implements CanActivate {
     config: ConfigService,
   ) {
     this.maxRequests = Number(config.get('RATE_LIMIT_MAX', 10));
-    this.windowSeconds = Number(config.get('RATE_LIMIT_WINDOW_SEGUNDOS', 60));
+    this.windowSeconds = Number(config.get('RATE_LIMIT_VENTANA_SEGUNDOS', 60));
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

@@ -6,6 +6,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
+  ApiSecurity,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -17,11 +18,7 @@ import { ActualizarPrecioDto } from './dtos/actualizar-precio.dto';
 import { RateLimitGuard } from '../common/guards/rate-limit.guard';
 
 @ApiTags('precios')
-@ApiHeader({
-  name: 'x-api-key',
-  description: 'Clave de API del cliente para control de cuotas y rate limiting',
-  required: true,
-})
+@ApiSecurity('x-api-key')
 @ApiUnauthorizedResponse({ description: 'Header x-api-key ausente o inválido' })
 @ApiResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,
