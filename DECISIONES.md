@@ -1,7 +1,5 @@
 # Decisiones
 
-> Completa este archivo con tus propias palabras. Media página alcanza. En la entrevista te pediremos que expliques cada punto.
-
 ## Caché
 
 <!-- ¿Qué guardas en Redis, con qué clave y con qué TTL? ¿Guardas también los SKU inexistentes? ¿Por qué? -->
